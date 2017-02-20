@@ -5,15 +5,17 @@ class TodoModel {
     @observable description;
     @observable completed;
 
-    constructor(description, completed = false) {
+    constructor(description) {
         this.id = uniqueId('todo_');
         this.description = description;
-        this.completed = completed;
+        this.completed = false;
     }
 
     toggle() {
         this.completed = !this.completed;
     }
+
+
 }
 
 export default TodoModel;

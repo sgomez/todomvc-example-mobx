@@ -31,17 +31,11 @@ class TodoStore {
     }
 
     @computed get activeCount() {
-        return this.todos.reduce(
-            (sum, todo) => sum + (todo.completed ? 0 : 1),
-            0
-        );
+        return this.todos.filter(todo => !todo.completed).length;
     }
 
     @computed get completedCount() {
-        return this.todos.reduce(
-            (sum, todo) => sum + (todo.completed ? 1 : 0),
-            0
-        );
+        return this.todos.filter(todo => todo.completed).length;
     }
 }
 

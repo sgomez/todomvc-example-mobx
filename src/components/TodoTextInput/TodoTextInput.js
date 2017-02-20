@@ -2,18 +2,16 @@ import React from 'react';
 import classnames from 'classnames';
 import { observer, inject } from 'mobx-react';
 
-const TodoTextInput = inject(
-    'viewStore'
-)(observer(({
-    viewStore,
+const TodoTextInput = observer(({
     editing,
+    editingTodo,
     newTodo,
     onSave,
     placeholder,
 }) => {
     const handleChange = (event) => {
         if (editing) {
-            viewStore.editingTodo.description = event.target.value;
+            editingTodo.description = event.target.value;
         }
     };
 
@@ -44,17 +42,33 @@ const TodoTextInput = inject(
             placeholder={placeholder}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
-            value={ editing ? viewStore.editingTodo.description : undefined }
+            value={ editing ? editingTodo.description : undefined }
         />
     );
-}));
+});
 
 TodoTextInput.propTypes = {
-    description: React.PropTypes.string,
+    editing: React.PropTypes.bool,
+    editingTodo: React.PropTypes.object,
+    newTodo: React.PropTypes.bool,
+    onSave: React.PropTypes.func.isRequired,
+    placeholder: React.PropTypes.string,
+};
+
+const TodoTextInputContainer = inject(
+    'viewStore'
+)(observer(({
+    ...props
+}) => (
+    <TodoTextInput editingTodo={props.viewStore.editingTodo} {...props}/>
+)));
+
+TodoTextInputContainer.wrappedComponent.propTypes = {
     editing: React.PropTypes.bool,
     newTodo: React.PropTypes.bool,
     onSave: React.PropTypes.func.isRequired,
     placeholder: React.PropTypes.string,
 };
 
-export default TodoTextInput;
+export default TodoTextInputContainer;
+export { TodoTextInput };

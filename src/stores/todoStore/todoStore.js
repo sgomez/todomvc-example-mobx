@@ -18,13 +18,16 @@ class TodoStore {
         );
     }
 
+    @action remove(todo) {
+        this.todos.remove(todo);
+    }
+
     @action toggleAll() {
         const areAllMarked = this.todos.every(todo => todo.completed);
 
-        this.todos = this.todos.map(todo => ({
-            ...todo,
-            completed: !areAllMarked,
-        }));
+        this.todos.forEach(todo => {
+            todo.completed = !areAllMarked;
+        });
     }
 
     @computed get activeCount() {

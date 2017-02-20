@@ -4,11 +4,9 @@ import Header from "../Header";
 import MainSection from "../MainSection";
 import Footer from "../Footer";
 
-import * as actions from '../../actions';
-
 const App = () => (
     <div>
-        <Header addTodo={actions.addTodo} />
+        <Header />
         <MainSection />
         <Footer />
     </div>

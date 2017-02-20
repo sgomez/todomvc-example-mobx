@@ -1,1 +1,1 @@
-export default from './MainSectionContainer';
+export default from './MainSection';

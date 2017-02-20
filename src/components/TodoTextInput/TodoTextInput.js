@@ -1,13 +1,23 @@
 import React from 'react';
 import classnames from 'classnames';
+import { observer, inject } from 'mobx-react';
 
-const TodoTextInput = ({
+const TodoTextInput = inject(
+    'viewStore'
+)(observer(({
+    viewStore,
+    editing,
     newTodo,
     onSave,
     placeholder,
-    text
 }) => {
-    const onKeyDown = (event) => {
+    const handleChange = (event) => {
+        if (editing) {
+            viewStore.editingTodo.description = event.target.value;
+        }
+    };
+
+    const handleKeyDown = (event) => {
         if (event.which === 13) {
             const description = event.target.value.trim();
 
@@ -25,23 +35,26 @@ const TodoTextInput = ({
         <input
             className={
                 classnames({
+                    edit: editing,
                     'new-todo': newTodo
                 })
             }
             type="text"
-            autoFocus="true"
+            autoFocus
             placeholder={placeholder}
-            onKeyDown={onKeyDown}
-            value={text}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            value={ editing ? viewStore.editingTodo.description : undefined }
         />
     );
-};
+}));
 
 TodoTextInput.propTypes = {
+    description: React.PropTypes.string,
+    editing: React.PropTypes.bool,
     newTodo: React.PropTypes.bool,
     onSave: React.PropTypes.func.isRequired,
     placeholder: React.PropTypes.string,
-    text: React.PropTypes.string,
 };
 
 export default TodoTextInput;

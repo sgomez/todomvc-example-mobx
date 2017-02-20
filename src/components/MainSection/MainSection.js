@@ -1,5 +1,5 @@
 import React from 'react';
-import { observer } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 
 import TodoItem from '../TodoItem';
 import { SHOW_ALL, SHOW_COMPLETED, SHOW_ACTIVE } from '../../constants/filters';
@@ -28,37 +28,34 @@ const ToggleAllButton = ({
     return null;
 };
 
-const MainSection = observer(({
-    filter,
-    onChange,
-    onToggle,
-    todos
+const MainSection = inject(
+    'todoStore',
+    'viewStore'
+)(observer(({
+    todoStore,
+    viewStore,
 }) => {
-    const filteredTodos = todos.filter(TODO_FILTERS[filter]);
-    const completedCount = todos.reduce((count, todo) =>
-        todo.completed ? count + 1 : count,
-        0
-    );
+    const filteredTodos = todoStore.todos.filter(TODO_FILTERS[viewStore.filter]);
+
+    const handleDelete = (todo) => { todoStore.remove(todo)};
+    const handleToggleOne = (todo) => { todo.toggle() };
+    const handleToggleAll = () => { todoStore.toggleAll() };
 
     return (
         <section className="main">
-            <ToggleAllButton completedCount={completedCount}
-                             count={todos.length}
-                             onChange={onToggle} />
+            <ToggleAllButton completedCount={todoStore.completedCount}
+                             count={todoStore.todos.length}
+                             onChange={handleToggleAll} />
             <ul className="todo-list">
                 { filteredTodos.map( todo => (
-                    <TodoItem key={todo.id} todo={todo} onChange={onChange}/>
+                    <TodoItem key={todo.id}
+                              onChange={handleToggleOne}
+                              onDelete={handleDelete}
+                              todo={todo} />
                 ))}
             </ul>
         </section>
     );
-});
-
-MainSection.propTypes = {
-    filter: React.PropTypes.string.isRequired,
-    onChange: React.PropTypes.func.isRequired,
-    onToggle: React.PropTypes.func.isRequired,
-    todos: React.PropTypes.object.isRequired,
-};
+}));
 
 export default MainSection;

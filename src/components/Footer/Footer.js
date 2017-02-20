@@ -17,7 +17,7 @@ const ClearButton = ({
     if (completedCount > 0) {
         return (
             <button className="clear-completed"
-                    onClick={() => onClick(null)}>
+                    onClick={onClick}>
                 Clear completed
             </button>
         );
@@ -54,25 +54,47 @@ const TodoCount = ({
     );
 };
 
-const Footer = inject(
+const Footer = ({
+    activeCount,
+    activeFilter,
+    completedCount,
+    handleChangeFilter,
+    handleClearCompleted,
+}) => (
+    <footer className="footer">
+        <TodoCount count={activeCount} />
+        <ul className="filters">
+            {[ SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED ].map(filter =>
+                <li key={filter}>
+                    <FilterLink filter={filter} activeFilter={activeFilter} onClick={handleChangeFilter} />
+                </li>
+            )}
+        </ul>
+        <ClearButton completedCount={completedCount} onClick={handleClearCompleted} />
+    </footer>
+);
+
+Footer.propTypes = {
+    activeCount: React.PropTypes.number.isRequired,
+    activeFilter: React.PropTypes.string.isRequired,
+    completedCount: React.PropTypes.number.isRequired,
+    handleChangeFilter: React.PropTypes.func.isRequired,
+    handleClearCompleted: React.PropTypes.func.isRequired,
+};
+
+const FooterContainer = inject(
     'todoStore',
-    'viewStore'
+    'viewStore',
 )(observer(({
     todoStore,
     viewStore
 }) => (
-    <footer className="footer">
-        <TodoCount count={todoStore.activeCount} />
-        <ul className="filters">
-            {[ SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED ].map(filter =>
-                <li key={filter}>
-                    <FilterLink filter={filter} activeFilter={viewStore.filter} onClick={viewStore.setFilter} />
-                </li>
-            )}
-        </ul>
-        <ClearButton completedCount={todoStore.completedCount} onClick={() => todoStore.clearCompleted()} />
-    </footer>
+    <Footer activeCount={todoStore.activeCount}
+            activeFilter={viewStore.filter}
+            completedCount={todoStore.completedCount}
+            handleClearCompleted={() => todoStore.clearCompleted()}
+            handleChangeFilter={viewStore.setFilter} />
 )));
 
-
-export default Footer;
+export default FooterContainer;
+export { Footer };

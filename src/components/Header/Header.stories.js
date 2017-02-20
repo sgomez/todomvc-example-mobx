@@ -2,7 +2,7 @@ import React from 'react';
 import { action, storiesOf } from '@kadira/storybook';
 
 import { Header } from './Header';
-import ViewStoreDecorator from '../../../stories/decorators/ViewStoreDecorator';
+import StoreDecorator from '../../../stories/decorators/StoreDecorator';
 
 import 'todomvc-app-css/index.css';
 
@@ -11,9 +11,8 @@ const mockupHandeSaveTodo = (text) => {
     handleSaveTodo(text);
 };
 
-
 storiesOf('Header', module)
-    .addDecorator(ViewStoreDecorator)
+    .addDecorator(StoreDecorator)
     .add('Show header', () => (
         <Header handleSaveTodo={mockupHandeSaveTodo} />
     ))

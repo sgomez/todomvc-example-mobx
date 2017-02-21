@@ -66,7 +66,7 @@ MainSection.propTypes = {
     handleToggleAll: React.PropTypes.func.isRequired,
     editingTodo: React.PropTypes.object,
     filter: React.PropTypes.string.isRequired,
-    todos: React.PropTypes.array.isRequired,
+    todos: React.PropTypes.object.isRequired,
 };
 
 const MainSectionContainer = inject(

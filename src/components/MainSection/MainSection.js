@@ -49,8 +49,10 @@ const MainSection = inject(
             <ul className="todo-list">
                 { filteredTodos.map( todo => (
                     <TodoItem key={todo.id}
+                              editing={viewStore.editingTodo === todo}
                               onChange={handleToggleOne}
                               onDelete={handleDelete}
+                              onEditing={(todo) => viewStore.setEditingTodo(todo)}
                               todo={todo} />
                 ))}
             </ul>

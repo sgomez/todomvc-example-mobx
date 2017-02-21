@@ -1,16 +1,14 @@
 import React from 'react';
-import { inject, observer } from 'mobx-react';
 import classnames from 'classnames';
 
 import TodoTextInput from '../TodoTextInput';
 
-const TodoItem = inject(
-    'viewStore'
-)(observer(({
-    viewStore,
+const TodoItem = ({
+    editing,
     onChange,
     onDelete,
-    todo
+    onEditing,
+    todo,
 }) => {
     const handleSave = (todo, text) => {
         if (text.length === 0) {
@@ -18,15 +16,14 @@ const TodoItem = inject(
         } else {
             todo.description = text;
         }
-        viewStore.setEditingTodo(null);
+        onEditing(null);
     };
 
     const handleDoubleClick = () => {
-        viewStore.setEditingTodo(todo);
+        onEditing(todo);
     };
 
     let element;
-    const editing = viewStore.editingTodo === todo;
 
     if (editing) {
         element = (
@@ -53,11 +50,19 @@ const TodoItem = inject(
     return (
         <li className={classnames({
             completed: todo.completed,
-            editing: viewStore.editingTodo === todo
+            editing: editing
         })}>
             {element}
         </li>
     );
-}));
+};
+
+TodoItem.propTypes = {
+    editing: React.PropTypes.bool,
+    onChange: React.PropTypes.func.isRequired,
+    onDelete: React.PropTypes.func.isRequired,
+    onEditing: React.PropTypes.func.isRequired,
+    todo: React.PropTypes.object.isRequired,
+};
 
 export default TodoItem;

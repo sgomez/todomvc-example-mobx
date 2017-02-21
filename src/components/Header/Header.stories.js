@@ -5,6 +5,9 @@ import { Header } from './Header';
 import StoreDecorator from '../../../stories/decorators/StoreDecorator';
 
 import 'todomvc-app-css/index.css';
+import TodoModel from "../../models/TodoModel/TodoModel";
+
+const todo = new TodoModel();
 
 const mockupHandeSaveTodo = (text) => {
     const handleSaveTodo = action('saved');
@@ -14,6 +17,6 @@ const mockupHandeSaveTodo = (text) => {
 storiesOf('Header', module)
     .addDecorator(StoreDecorator)
     .add('Show header', () => (
-        <Header handleSaveTodo={mockupHandeSaveTodo} />
+        <Header addTodo={mockupHandeSaveTodo} todo={todo} />
     ))
 ;

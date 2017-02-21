@@ -2,31 +2,40 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 
 import TodoTextInput from '../TodoTextInput';
+import TodoModel from "../../models/TodoModel/TodoModel";
 
 const Header = ({
-    handleSaveTodo
+    addTodo
 }) => {
+    const todo = new TodoModel();
+
+    const handleSaveTodo = (description) => {
+        if (description.length > 0) {
+            addTodo(description);
+        }
+    };
+
     return (
         <header className="header">
             <h1>todos</h1>
-            <TodoTextInput  newTodo
-                            onSave={handleSaveTodo}
-                            placeholder="What needs to be done?"
-            />
+            <TodoTextInput newTodo
+                           onSave={handleSaveTodo}
+                           placeholder="What needs to be done?"
+                           todo={todo} />
         </header>
     );
 };
 
 Header.propTypes = {
-    handleSaveTodo: React.PropTypes.func.isRequired,
+    addTodo: React.PropTypes.func.isRequired,
 };
 
 const HeaderContainer = inject(
     'todoStore'
 )(observer(({
-    ...props
+    todoStore
 }) => (
-    <Header handleSaveTodo={props.todoStore.add} />
+    <Header addTodo={todoStore.add} />
 )));
 
 export default HeaderContainer;

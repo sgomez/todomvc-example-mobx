@@ -30,9 +30,9 @@ const TodoItem = inject(
 
     if (editing) {
         element = (
-            <TodoTextInput editing={editing}
+            <TodoTextInput editing
                            onSave={(text) => handleSave(todo, text)}
-                           description={todo.description} />
+                           todo={todo} />
         );
     } else {
         element = (

@@ -1,30 +1,32 @@
 import React from 'react';
 import classnames from 'classnames';
-import { observer, inject } from 'mobx-react';
 
-const TodoTextInput = observer(({
+const TodoTextInput = ({
     editing,
-    editingTodo,
     newTodo,
     onSave,
     placeholder,
+    todo,
 }) => {
-    const handleChange = (event) => {
+    const handleBlur = (event) => {
+        const description = event.target.value.trim();
+
         if (editing) {
-            editingTodo.description = event.target.value;
+            onSave(description);
         }
+    };
+
+    const handleChange = (event) => {
+        todo.description = event.target.value;
     };
 
     const handleKeyDown = (event) => {
         if (event.which === 13) {
             const description = event.target.value.trim();
+            onSave(description);
 
-            if (description.length > 0) {
-                onSave(description);
-
-                if (newTodo) {
-                    event.target.value = '';
-                }
+            if (newTodo) {
+                event.target.value = '';
             }
         }
     };
@@ -40,35 +42,20 @@ const TodoTextInput = observer(({
             type="text"
             autoFocus
             placeholder={placeholder}
+            onBlur={handleBlur}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
-            value={ editing ? editingTodo.description : undefined }
+            defaultValue={todo.description}
         />
     );
-});
+};
 
 TodoTextInput.propTypes = {
     editing: React.PropTypes.bool,
-    editingTodo: React.PropTypes.object,
     newTodo: React.PropTypes.bool,
     onSave: React.PropTypes.func.isRequired,
     placeholder: React.PropTypes.string,
+    todo: React.PropTypes.object,
 };
 
-const TodoTextInputContainer = inject(
-    'viewStore'
-)(observer(({
-    ...props
-}) => (
-    <TodoTextInput editingTodo={props.viewStore.editingTodo} {...props}/>
-)));
-
-TodoTextInputContainer.wrappedComponent.propTypes = {
-    editing: React.PropTypes.bool,
-    newTodo: React.PropTypes.bool,
-    onSave: React.PropTypes.func.isRequired,
-    placeholder: React.PropTypes.string,
-};
-
-export default TodoTextInputContainer;
-export { TodoTextInput };
+export default TodoTextInput;

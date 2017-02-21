@@ -9,7 +9,7 @@ class TodoStore {
     }
 
     @action add = (description) => {
-        this.todos.push(new TodoModel(description));
+        this.todos.push(new TodoModel(description, this));
     };
 
     @action clearCompleted () {

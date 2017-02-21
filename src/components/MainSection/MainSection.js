@@ -28,36 +28,66 @@ const ToggleAllButton = ({
     return null;
 };
 
-const MainSection = inject(
-    'todoStore',
-    'viewStore'
-)(observer(({
-    todoStore,
-    viewStore,
+const MainSection = observer(({
+    handleEditing,
+    handleToggleAll,
+    editingTodo,
+    filter,
+    todos,
 }) => {
-    const filteredTodos = todoStore.todos.filter(TODO_FILTERS[viewStore.filter]);
+    const filteredTodos = todos.filter(TODO_FILTERS[filter]);
+    const completedCount = todos.filter((todo) => todo.completed).length;
 
-    const handleDelete = (todo) => { todoStore.remove(todo)};
-    const handleToggleOne = (todo) => { todo.toggle() };
-    const handleToggleAll = () => { todoStore.toggleAll() };
+    const handleToggleOne = (todo) => todo.toggle();
+    const handleDeleteOne = (todo) => todo.destroy();
+    const handleEditOne = (todo) => handleEditing(todo);
 
     return (
         <section className="main">
-            <ToggleAllButton completedCount={todoStore.completedCount}
-                             count={todoStore.todos.length}
+            <ToggleAllButton completedCount={completedCount}
+                             count={todos.length}
                              onChange={handleToggleAll} />
             <ul className="todo-list">
                 { filteredTodos.map( todo => (
                     <TodoItem key={todo.id}
-                              editing={viewStore.editingTodo === todo}
+                              editing={editingTodo === todo}
                               onChange={handleToggleOne}
-                              onDelete={handleDelete}
-                              onEditing={(todo) => viewStore.setEditingTodo(todo)}
+                              onDelete={handleDeleteOne}
+                              onEditing={handleEditOne}
                               todo={todo} />
                 ))}
             </ul>
         </section>
     );
-}));
+});
 
-export default MainSection;
+MainSection.propTypes = {
+    handleEditing: React.PropTypes.func.isRequired,
+    handleToggleAll: React.PropTypes.func.isRequired,
+    editingTodo: React.PropTypes.object,
+    filter: React.PropTypes.string.isRequired,
+    todos: React.PropTypes.array.isRequired,
+};
+
+const MainSectionContainer = inject(
+    'todoStore',
+    'viewStore'
+)(observer(({
+    todoStore,
+    viewStore,
+}) => (
+    <MainSection
+            handleEditing={(todo) => viewStore.setEditingTodo(todo)}
+            handleToggleAll={() => todoStore.toggleAll()}
+            editingTodo={viewStore.editingTodo}
+            filter={viewStore.filter}
+            todos={todoStore.todos} />
+)));
+
+MainSectionContainer.wrappedComponent.propTypes = {
+    todoStore: React.PropTypes.object.isRequired,
+    viewStore: React.PropTypes.object.isRequired,
+};
+
+export default MainSectionContainer;
+export { MainSection };

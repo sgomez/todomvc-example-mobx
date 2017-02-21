@@ -42,7 +42,7 @@ const TodoItem = ({
                     {todo.description}
                 </label>
                 <button className="destroy"
-                        onClick={() => onDelete(todo)}/>
+                        onClick={(e) => onDelete(todo)}/>
             </div>
         );
     }

@@ -96,5 +96,10 @@ const FooterContainer = inject(
             handleChangeFilter={viewStore.setFilter} />
 )));
 
+FooterContainer.wrappedComponent.propTypes = {
+    todoStore: React.PropTypes.object.isRequired,
+    viewStore: React.PropTypes.object.isRequired,
+};
+
 export default FooterContainer;
 export { Footer };

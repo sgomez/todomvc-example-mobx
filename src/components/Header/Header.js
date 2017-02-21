@@ -38,5 +38,9 @@ const HeaderContainer = inject(
     <Header addTodo={todoStore.add} />
 )));
 
+HeaderContainer.wrappedComponent.propTypes = {
+    todoStore: React.PropTypes.object.isRequired,
+};
+
 export default HeaderContainer;
 export { Header };
